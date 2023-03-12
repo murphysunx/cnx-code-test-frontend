@@ -10,6 +10,8 @@ export class DealerService {
   constructor(private http: HttpClient) {}
 
   fetchAllDealers(): Observable<Dealer[]> {
-    return this.http.get<Dealer[]>('http://localhost:3000/dealers');
+    return this.http.get<Dealer[]>(
+      'https://ud9fscxo84.execute-api.us-east-1.amazonaws.com/latest/dealers'
+    );
   }
 }
