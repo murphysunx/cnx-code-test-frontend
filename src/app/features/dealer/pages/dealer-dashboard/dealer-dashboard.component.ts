@@ -25,6 +25,7 @@ export class DealerDashboardComponent implements OnInit {
   ) {}
 
   loadDealers(): void {
+    this.err = void 0;
     this.init = false;
     this.dealerService.fetchAllDealers().subscribe({
       next: (dealers) => {
