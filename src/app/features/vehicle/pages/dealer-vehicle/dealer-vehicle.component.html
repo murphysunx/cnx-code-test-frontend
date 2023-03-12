@@ -1,0 +1,18 @@
+<ng-container *ngIf="initalised; else loading">
+  <ng-container *ngIf="bac && vehicles">
+    <ng-container *ngIf="vehicles.length > 0; else noVehicles">
+      <h1>Here is a list of vehicles under the dealer - {{ bac }}</h1>
+      <div>
+        <mat-list role="list">
+          <div *ngFor="let vehicle of vehicles">
+            <app-vehicle-deatil [vehicle]="vehicle"></app-vehicle-deatil>
+          </div>
+        </mat-list>
+      </div>
+    </ng-container>
+    <ng-template #noVehicles>
+      No vehicles under the dealer - {{ bac }}
+    </ng-template>
+  </ng-container>
+</ng-container>
+<ng-template #loading> loading </ng-template>

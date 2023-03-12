@@ -1,0 +1,13 @@
+<ng-container *ngIf="initalised; else loading">
+  <h1>Dealer Dashboard</h1>
+  <ng-container *ngIf="!error && dealers; else errorTemplate">
+    <app-dealer-list [dealers]="dealers"></app-dealer-list>
+  </ng-container>
+  <ng-template #errorTemplate>
+    Fail to load dealers. Please try agin.
+    <button mat-raised-button color="primary" (click)="loadDealers()">
+      Reload Dealers
+    </button>
+  </ng-template>
+</ng-container>
+<ng-template #loading> loading </ng-template>

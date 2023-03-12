@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ dealer.name }}</mat-card-title>
+    <mat-card-subtitle>{{ dealer.bac }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>city: {{ dealer.city }}</p>
+    <p>state: {{ dealer.state }}</p>
+    <p>country: {{ dealer.country }}</p>
+    <p>brand: {{ dealer.brand }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="viewVehicles()">
+      View Vehicles
+    </button>
+  </mat-card-actions>
+</mat-card>
