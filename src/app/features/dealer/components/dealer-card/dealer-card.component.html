@@ -10,7 +10,12 @@
     <p>brand: {{ dealer.brand }}</p>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="viewVehicles()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="viewVehicles()"
+      data-testid="view-dealer-vehicles-button"
+    >
       View Vehicles
     </button>
   </mat-card-actions>
