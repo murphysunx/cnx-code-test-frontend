@@ -36,7 +36,7 @@ export class DealerDashboardComponent implements OnInit {
       error: (err) => {
         this.init = true;
         this.err = err;
-        console.log('error while loading all dealers', err);
+        console.error('error while loading all dealers', err);
         this.cd.detectChanges();
       },
     });
