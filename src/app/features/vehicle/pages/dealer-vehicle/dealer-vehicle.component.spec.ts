@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { isEqual } from 'lodash';
+import { of, ReplaySubject } from 'rxjs';
+import { Spied } from 'src/app/shared/tests/utils';
 import { Vehicle } from '../../models/vehicle.model';
 import { VehicleService } from '../../services/vehicle.service';
 
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { DealerVehicleComponent } from './dealer-vehicle.component';
 
 describe('DealerVehicleComponent', () => {
   let component: DealerVehicleComponent;
   let fixture: ComponentFixture<DealerVehicleComponent>;
-  let vehicleService: VehicleService;
-  let route: ActivatedRoute;
-
-  let vehicleSource = new Subject<Vehicle[]>();
-  let routeParamsSource = new Subject<{ bac: string }>();
+  let vehicleService: Spied<VehicleService>;
+  let route: Spied<ActivatedRoute>;
 
   let sampleBac = '122345';
   let sampleVehicleMapByBac: Record<string, Vehicle[]> = {
@@ -88,16 +88,17 @@ describe('DealerVehicleComponent', () => {
   };
 
   beforeEach(async () => {
-    vehicleService = jasmine.createSpyObj('VehicleService', {
-      getVehiclesByBac: vehicleSource.asObservable(),
-    });
+    vehicleService = jasmine.createSpyObj('VehicleService', [
+      'getVehiclesByBac',
+    ]);
     route = jasmine.createSpyObj(
       'ActivatedRoute',
       {},
       {
-        params: routeParamsSource.asObservable(),
+        params: of({ bac: sampleBac }),
       }
     );
+
     await TestBed.configureTestingModule({
       declarations: [DealerVehicleComponent],
       providers: [
@@ -107,70 +108,65 @@ describe('DealerVehicleComponent', () => {
         },
         {
           provide: ActivatedRoute,
-          useValue: route.params,
+          useValue: route,
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DealerVehicleComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    fixture.detectChanges();
+    vehicleService.getVehiclesByBac.and.returnValue(of([]));
     expect(component).toBeTruthy();
   });
 
-  it('should read route params', () => {
-    expect(route.params).toHaveBeenCalled();
-  });
-
   it('should call vehicle service', () => {
-    expect(vehicleService.getVehiclesByBac).toHaveBeenCalled();
-  });
-
-  it('should call vehicle service after reading route params', () => {
-    expect(route.params).toHaveBeenCalledBefore(
-      vehicleService.getVehiclesByBac
-    );
+    fixture.detectChanges();
+    vehicleService.getVehiclesByBac.and.returnValue(of(sampleVehicleMapByBac));
+    expect(vehicleService.getVehiclesByBac.calls.count()).toBe(1);
   });
 
   it('should load no vehicles', () => {
-    const bacVehicles: Vehicle[] = [];
-    routeParamsSource.next({
-      bac: sampleBac,
-    });
-    vehicleSource.next(bacVehicles);
+    vehicleService.getVehiclesByBac.and.returnValue(of([]));
     fixture.detectChanges();
     expect(component.bac).toBe(sampleBac);
     expect(component.vehicles?.length).toBe(0);
   });
 
   it('should load correct vehicles', () => {
-    routeParamsSource.next({
-      bac: sampleBac,
-    });
-    vehicleSource.next(sampleVehicleMapByBac[sampleBac]);
+    vehicleService.getVehiclesByBac.and.returnValue(
+      of(sampleVehicleMapByBac[sampleBac])
+    );
     fixture.detectChanges();
     expect(component.bac).toBe(sampleBac);
-    expect(component.vehicles).toBe(sampleVehicleMapByBac[sampleBac]);
+    expect(
+      isEqual(component.vehicles, sampleVehicleMapByBac[sampleBac])
+    ).toBeTruthy();
   });
 
   it('should listen to route bac changes', () => {
-    const bacVehicles: Vehicle[] = [];
-    routeParamsSource.next({
-      bac: sampleBac,
-    });
-    vehicleSource.next(bacVehicles);
+    const paramsSubject = new ReplaySubject();
+    (
+      Object.getOwnPropertyDescriptor(route, 'params') as any
+    ).get.and.returnValue(paramsSubject);
+    paramsSubject.next({ bac: '122' });
+    vehicleService.getVehiclesByBac.and.returnValue(of([]));
+    fixture.detectChanges();
+    expect(component.bac).toBe('122');
+    expect(component.vehicles!.length).toBe(0);
+    vehicleService.getVehiclesByBac.and.returnValue(
+      of(sampleVehicleMapByBac[sampleBac])
+    );
+    paramsSubject.next({ bac: sampleBac });
     fixture.detectChanges();
     expect(component.bac).toBe(sampleBac);
-    expect(component.vehicles?.length).toBe(0);
-    routeParamsSource.next({
-      bac: sampleBac,
-    });
-    vehicleSource.next(sampleVehicleMapByBac[sampleBac]);
-    fixture.detectChanges();
-    expect(component.bac).toBe(sampleBac);
-    expect(component.vehicles).toBe(sampleVehicleMapByBac[sampleBac]);
+    expect(vehicleService.getVehiclesByBac.calls.count()).toBe(2);
+    expect(
+      isEqual(component.vehicles, sampleVehicleMapByBac[sampleBac])
+    ).toBeTruthy();
   });
 });
