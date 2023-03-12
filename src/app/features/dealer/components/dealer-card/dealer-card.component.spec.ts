@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Dealer } from '../../models/dealer.model';
 
@@ -18,6 +19,7 @@ describe('DealerCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DealerCardComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DealerCardComponent);
