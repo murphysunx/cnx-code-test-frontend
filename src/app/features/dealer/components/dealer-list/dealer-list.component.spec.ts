@@ -74,7 +74,6 @@ describe('DealerListComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     const items = compiled.getElementsByClassName('.dealer-list__item');
-    console.log('items', items.length);
     expect(isEqual(component.dealers, sampleDealers)).toBeTruthy();
     expect(
       compiled.querySelectorAll('.dealer-list__item').length ===

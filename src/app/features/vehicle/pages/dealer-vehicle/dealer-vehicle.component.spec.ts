@@ -161,6 +161,7 @@ describe('DealerVehicleComponent', () => {
     vehicleService.getVehiclesByBac.and.returnValue(
       of(sampleVehicleMapByBac[sampleBac])
     );
+    expect(vehicleService.getVehiclesByBac.calls.count()).toBe(1);
     paramsSubject.next({ bac: sampleBac });
     fixture.detectChanges();
     expect(component.bac).toBe(sampleBac);
