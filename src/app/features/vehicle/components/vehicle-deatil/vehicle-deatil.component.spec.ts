@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Vehicle } from '../../models/vehicle.model';
 
@@ -32,14 +33,16 @@ describe('VehicleDeatilComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [VehicleDeatilComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(VehicleDeatilComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    component.vehicle = sampleVehicle;
+    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
