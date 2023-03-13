@@ -60,6 +60,7 @@ describe('DealerCardComponent', () => {
     const viewVehiclesButton = debugElement.query(
       By.css('[data-testid="view-dealer-vehicles-button"]')
     );
+    expect(viewVehiclesButton).toBeTruthy();
     expect(routerSpy.navigateByUrl.calls.count()).toBe(0);
     viewVehiclesButton.triggerEventHandler('click', null);
     expect(routerSpy.navigateByUrl.calls.count()).toBe(1);
