@@ -7,6 +7,10 @@ const vehicleRoutes: Routes = [
     path: ':bac',
     component: DealerVehicleComponent,
   },
+  {
+    path: '**',
+    redirectTo: '/dashboard',
+  },
 ];
 
 @NgModule({
