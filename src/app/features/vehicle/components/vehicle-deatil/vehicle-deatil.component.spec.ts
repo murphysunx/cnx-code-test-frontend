@@ -50,7 +50,6 @@ fdescribe('VehicleDeatilComponent', () => {
     component.vehicle = sampleVehicle;
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    console.log('text content', compiled.textContent);
     expect(compiled.textContent?.includes(sampleVehicle.bac)).toBeTruthy();
     expect(compiled.textContent?.includes(sampleVehicle.vin)).toBeTruthy();
     expect(
