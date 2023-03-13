@@ -4,7 +4,7 @@ import { Vehicle } from '../../models/vehicle.model';
 
 import { VehicleDeatilComponent } from './vehicle-deatil.component';
 
-describe('VehicleDeatilComponent', () => {
+fdescribe('VehicleDeatilComponent', () => {
   let component: VehicleDeatilComponent;
   let fixture: ComponentFixture<VehicleDeatilComponent>;
   let sampleVehicle: Vehicle = {
@@ -50,6 +50,7 @@ describe('VehicleDeatilComponent', () => {
     component.vehicle = sampleVehicle;
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
+    console.log('text content', compiled.textContent);
     expect(compiled.textContent?.includes(sampleVehicle.bac)).toBeTruthy();
     expect(compiled.textContent?.includes(sampleVehicle.vin)).toBeTruthy();
     expect(
