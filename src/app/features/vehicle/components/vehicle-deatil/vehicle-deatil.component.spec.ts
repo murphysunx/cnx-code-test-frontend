@@ -4,7 +4,7 @@ import { Vehicle } from '../../models/vehicle.model';
 
 import { VehicleDeatilComponent } from './vehicle-deatil.component';
 
-fdescribe('VehicleDeatilComponent', () => {
+describe('VehicleDeatilComponent', () => {
   let component: VehicleDeatilComponent;
   let fixture: ComponentFixture<VehicleDeatilComponent>;
   let sampleVehicle: Vehicle = {
