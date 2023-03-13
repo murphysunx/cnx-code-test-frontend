@@ -57,8 +57,10 @@ export class DealerVehicleComponent implements OnInit, OnDestroy {
           this.init = true;
           this.err = err;
           console.error(err);
+          this.cd.detectChanges();
         },
       });
+    this.cd.detectChanges();
   }
 
   ngOnInit(): void {
