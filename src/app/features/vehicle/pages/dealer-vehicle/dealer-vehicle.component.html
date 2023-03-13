@@ -1,5 +1,5 @@
 <ng-container *ngIf="initalised; else loading">
-  <ng-container *ngIf="bac && vehicles">
+  <ng-container *ngIf="!error && bac && vehicles; else errorTemplate">
     <ng-container *ngIf="vehicles.length > 0; else noVehicles">
       <h1>Here is a list of vehicles under the dealer - {{ bac }}</h1>
       <div>
@@ -14,5 +14,16 @@
       No vehicles under the dealer - {{ bac }}
     </ng-template>
   </ng-container>
+  <ng-template #errorTemplate>
+    Fail to load the vehicles. Please try agin.
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="loadDealerVehicles()"
+      data-testid="reload-dealer-vehicles-button"
+    >
+      Reload
+    </button>
+  </ng-template>
 </ng-container>
 <ng-template #loading> loading </ng-template>

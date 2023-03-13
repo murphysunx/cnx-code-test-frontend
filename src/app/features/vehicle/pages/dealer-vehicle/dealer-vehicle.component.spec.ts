@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { isEqual } from 'lodash';
-import { of, ReplaySubject } from 'rxjs';
+import { of, ReplaySubject, throwError } from 'rxjs';
 import { Spied } from 'src/app/shared/tests/utils';
 import { Vehicle } from '../../models/vehicle.model';
 import { VehicleService } from '../../services/vehicle.service';
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { DealerVehicleComponent } from './dealer-vehicle.component';
+import { By } from '@angular/platform-browser';
 
 describe('DealerVehicleComponent', () => {
   let component: DealerVehicleComponent;
@@ -124,6 +125,20 @@ describe('DealerVehicleComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should init', () => {
+    expect(component.initalised).toBeFalsy();
+    vehicleService.getVehiclesByBac.and.returnValue(of(sampleVehicleMapByBac));
+    fixture.detectChanges();
+    expect(component.initalised).toBeTruthy();
+  });
+
+  it('should have error', () => {
+    expect(component.error).toBeFalsy();
+    vehicleService.getVehiclesByBac.and.returnValue(throwError('fail'));
+    fixture.detectChanges();
+    expect(component.error).toBeTruthy();
+  });
+
   it('should call vehicle service', () => {
     fixture.detectChanges();
     vehicleService.getVehiclesByBac.and.returnValue(of(sampleVehicleMapByBac));
@@ -169,5 +184,25 @@ describe('DealerVehicleComponent', () => {
     expect(
       isEqual(component.vehicles, sampleVehicleMapByBac[sampleBac])
     ).toBeTruthy();
+  });
+
+  it('should show reload button when errors', () => {
+    vehicleService.getVehiclesByBac.and.returnValue(throwError('fail'));
+    fixture.detectChanges();
+    expect(component.bac).toBe(sampleBac);
+    expect(vehicleService.getVehiclesByBac.calls.count()).toBe(1);
+    expect(component.error).toBeTruthy();
+    const { debugElement } = fixture;
+    const reloadDealerVehiclesButton = debugElement.query(
+      By.css('[data-testid="reload-dealer-vehicles-button"]')
+    );
+    expect(reloadDealerVehiclesButton).toBeTruthy();
+    vehicleService.getVehiclesByBac.and.returnValue(
+      of(sampleVehicleMapByBac[sampleBac])
+    );
+    reloadDealerVehiclesButton.triggerEventHandler('click', null);
+    fixture.detectChanges();
+    expect(vehicleService.getVehiclesByBac.calls.count()).toBe(2);
+    expect(component.error).toBeFalsy();
   });
 });
